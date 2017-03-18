@@ -12,7 +12,7 @@
 
 \title{\bf{Dynamics of Functional Brain Networks}}
 \author{Rick Evertz 9548866\\
-Supervisor: Prof. Damien Hicks \& Prof. David Liley\\
+Supervisor: Prof. Damien Hicks\\
 Swinburne University of Technology}
 \date{\today}
 \maketitle
@@ -55,6 +55,10 @@ A system that is maximally complex is in a state that has the largest potential 
 
 \section{Methods}
 
+\subsection{The source localization problem}
+Source localization can be summarized as an attempt to determine the source of a signal from some resulting pattern of observations. In the context of MEG/EEG brain data, source localization is the problem of determining the source of the signal within the brain volume, from the surface measurements on the scalp surface. The source localization is an inverse problem where we attempt to work back from an observed data distribution to determine the physical source. Clinically, the ability to localize the brain activity to some desired region and spatial resolution cannot be understated. However, within the context of this current research thesis it is not as clear cut. The desire is to characterize the properties of dynamical functional brain networks and attempt to observe some topological and statistical deviations in the networks of differing conscious states.\\ 
+\\
+The ability to resolve the source of the data, is undoubtedly important as it will provide a higher level of diagnostic information. Despite this, in effort to justify the time and computational resources devoted to source localization, it is currently unclear as to whether broaching the inverse problem is a worthwhile pursuit for this project. The ability to investigate dynamic functional networks is completely possible at the sensor level, and is not inhibited by a lack of source. The main goal of the research as it is currently constructed is to be able to derive quantifiable topological changes in the network structure as it changes in time. Removing the brain space source localization will only remove the ability to make quantitative statements about which portions of the brain are communicating and synchronizing their activity, but the network changes do not depend on the ability to locate the source. Perhaps a better approach is to investigate some preliminary studies into the changing network topologies at the sensor level, then time permitting, build the source localization in. The remaining issue is which source localization method to use as there exists no ''one size fits all'' solution, with the currently proposed methods each having a suite of difficulties and benefits. Much more reading is needed. 
 
 \subsection{Method - Data Collection}
 The data used within this research thesis was obtained  by simultaneous collection of MEG and EEG signals from patients. The subjects were placed under chemically induced anesthesia using Xe and $N_2 O$ gas. The simultaneous collection of the EEG and MEG enables are more accurate localization of the brain region responsible for the signal. To investigate the functional connectivity of brain networks, nodes and edges must be defined. The nodes of the functional networks are defined as voxels of brain matter which are located using beamforming techniques (MUST EXPLAIN BEAMFORMING AND THE VOXEL SIZE). The functional connections between nodes, edges, are defined (CURRENTLY) using the inverse covariance matrix of the data sets. By using the inverse covariance, we can observe how the individual nodes are correlated with one another, whilst accounting for the correlations between the other nodes, which can dramatically change the functional connectivity strength (REFERENCE AND DETAILED EXPLANATION OF CORRELATION AND INVERSE COVARIANCE MATRICES). Once the nodes have been defined using beamforming, the edges can be determined. However this is not a trivial process, as the way in which the data is parsed and analyzed will ultimately dictate the results obtained, more details in the following section.
