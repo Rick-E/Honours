@@ -1,4 +1,4 @@
-\documentclass{article}
+\documentclass[11pt]{article}
 %\twocolumn
 
 
@@ -7,28 +7,112 @@
 \graphicspath{Figss/}
 \usepackage{amsmath,amssymb}
 \usepackage{a4wide}
+\usepackage{physics}
+\usepackage{multicol}
+\usepackage{multirow}
+\usepackage[round]{natbib}
 \def\ni{\noindent}
+%\begin{document}
+
+%\title{\bf{Dynamics of Functional Brain Networks}}
+%\author{Rick Evertz 9548866\\
+%Supervisor: Prof. Damien Hicks\\
+%Swinburne University of Technology}
+%\date{\today}
+%\maketitle
+%\abstract 
+%\ni Investigating brain networks of people in conscious and unconscious states.
+%\pagebreak
+
+%\tableofcontents
+%\pagebreak
 \begin{document}
 
-\title{\bf{Dynamics of Functional Brain Networks}}
-\author{Rick Evertz 9548866\\
-Supervisor: Prof. Damien Hicks\\
-Swinburne University of Technology}
-\date{\today}
-\maketitle
-\abstract 
-\ni Investigating brain networks of people in conscious and unconscious states.
-\pagebreak
-
-\tableofcontents
-\pagebreak
 \section{Introduction}
-\subsection{Literature Review}
-The field of complex network analysis is diverse and fascinating, with advances in modeling various real world networks, such as the Internet, commercial flight paths, human social interactions and many others, providing valuable insight into the emergent behavior of these networks. Interestingly, many of these real world networks present similar properties as described by (Albert \& Barabasi 2002) in \emph{Statistical mechanics of complex networks}. The diverse range of phenomena that can be studied by modeling as a complex network has led naturally to investigations of brain structure. The brain is quite possibly the most complex object within the known universe, consisting of billions of neurons forming trillions of connections resulting in both an immensely dense and vast network.
+The aim of this research thesis is to develop a network inference method that can be applied to magnetoencephalography (MEG) and electroencephalography (EEG) time series. Research is motivated by work completed in the brain network community, where it has become increasingly relevant to have a robust and justifiable method for learning networks allowing the construction of functional connectivity networks. The desire is to build functional connectivity networks out of the time series data by inferring pairwise interactions using partial correlation. Model free, assumption-less sensor based networks are rarely used in investigative neurology, as they are demonstrated to suffer the effects of volume conduction and reference dependency, ultimately making it impossible to draw statistical or physiologically significant conclusions from the resulting networks. However, given that we are not directly interested in the underlying neural mechanics, but in developing a sound network inference tool, we will explore the networks at the sensor level. Partial correlation will be used to investigate interactions between nodes. 
+
+
+\section{Literature Review}
+It has become increasingly clear that there is a deep need for a robust and empirically justifiable method for inferring functional networks in neural activity recordings. Many techniques exists currently for learning network structure, but few, if any have been rigorously tested with prior to application. The situation is perhaps even dire than this, as many of these networks are being used to make clinical and physiological statements about the brain. Much of the functional connectivity work done in neuroscience has involved source localization in one form or another. Source localization is the inference of the physical origin of the measured electric potentials or magnetic fields collected using EEG and MEG, within the brain volume. We suggest that rather than attempting to source localize the networks using methods that have not been extensively verified, that develop a means to learn the network at the sensor level, using only the measured times series data, with no assumed a priori. The general approach of network learning in brain science is in several steps: Take data, construct forward model, 
+\subsection{General Background on Network Theory}
+Networks are a map of the relations between objects, they are constructed using nodes and edges. The mathematical description of networks has its foundations in graph theory. Nodes represent the objects in the network and edges are the connections between them. A simple example is a social network, with people representing nodes and the relationships between them, the edges. Networks can be small and simple, or they can be vast and complex in nature, and everything in between. The study of complex networks is as diverse as it is fascinating, with applications ranging across many fields. A brief survey of complex networks research presents general trends with researchers investigating the network structure and evolution. It is desirable to be able to condense a network down into a set of quantitative statements by application of a graph metric. A simple example is that of the node degree, consider a social network, it may be of interest to know who is the most popular? This could easily be achieved by summing the number of edges each node has (assuming popularity is based on the number of friends). [EDIT] Interestingly, many of these real world networks present similar properties as described by (Albert \& Barabasi 2002) in \emph{Statistical mechanics of complex networks}. Perhaps it is no surprise then that the study of complex networks has been applied to the brain. The diverse range of phenomena that can be studied by modeling as a complex network has led naturally to investigations of brain structure. The brain is a vast and complicated network consisting of billions of neurons and trillions of connections. The construction of brain networks, be that, the scale and how nodes and edges are defined, has many avenues.
+
+\subsection{General Brain Networks Studies (Structural)}
+Research on the properties and dynamics of the human brain has expanded significantly with the application of complex network analysis. Network theory has many applications in the brain, with the desire to be able to derive quantitative information on brain physiology and function. Brain connectivity networks are separated into three broad classes; structural, functional and effective connectivity measures \citet{fornito2013graph}. Structural connectivity networks are built using anatomical connections between brain regions. Functional connectivity is defined using statistical relations between neural activity recordings allowing for directed and undirected edges \citet{friston}. Finally, effective connectivity is the causal relation between brain regions \citet{fornito2013graph}. Analysis of the network is achieved by investigating either the topological or dynamical properties [REF ET AL]. Robust and well integrated networks appear to share several similar characteristics [EXAMPLES AND REF ET AL]. While it is not currently certain if the brain replicates all these properties, researchers attempt to quantify illnesses through observations in reductions or increases in certain network parameters, when compared to healthy comparisons [REF ET AL] \\
 \\
-\\
-The ability to model the brain as a complex network enables the quantification of structural and temporal properties that had previously been unfeasible (Sporns 2010). Despite the brains receptivity to being modeled in this way, it is not without experimental drawbacks. In a paper by Fornito and Zalesky (2013), they access the potential of complex networks as a tool for brain research. They discuss several limitations that are currently faced at various stages of modeling that can influence results. The first and major issue that is meets any team is the ability to define the network nodes. The brain, as mentioned prior, is made up of billions of neurons and trillions of connections, now to model the brain at the neuron scale would be computationally unfeasible.\\
+Studies into brain diseases such as Alzheimer, Parkinson and Multiple Sclerosis have found progress in the application of network theory. Researchers investigate and quantify the effect the degenerative diseases have on the brain in terms of graph theoretic measures. MS patients are observed to have a statistically significant reduction in network communicability \citep{MS1}. Shortest path length (SPL), global efficiency (GB) and network transitivity, all topological properties of a network, were observed to be diminished in MS patients when compared to healthy volunteers, suggesting that a break down in network integrity play a role in the cognitive decline of MS sufferers \citep{MS2}. In further support of \citet{MS2} analysis, MS patients were again observed with decreased network strength, transitivity and GE, with an increase in the SPL network wide \citep{MS3}. Interestingly, the general structural network architecture was found to be preserved, however a decrease in the strength of connections was apparent when compared with healthy controls \citep{MS3}. A study on Alzheimer's disease (AD) was completed by \citet{alz}, in which they investigated the effect of the disease on global network and sub-network scales. At the global network scale, no differences where revealed between AD and healthy controls. However, on the sub-network scale, AD patients appear to have a reduction of the small worldness of the networks with diminished integration. \citet{alz} also investigated other measures they defined as network entropy and complexity, and observed a reduction in the structural diversity and the intricacy of connections patterns. These findings lend support to the notion of network integrity playing an important role in brain health, in that, robust and well integrated networks are seemingly correlated with optimal cognition \citep{revbull}. 
+
+
+
+\subsection{Functional Connectivity Network Studies}
+Functional connectivity networks are maps of the interactions between brain regions. Building functional connectivity networks is achieved in a range of different manners, with no one standardized procedure yet found \citep{fornito2013graph}. Finding connections between nodes, whether that be sensor based or source based (more on this later), requires the application of a functional connectivity measure. Several measures exist within the literature [Mutual Information, Transfer Entropy, Granger Causality, Pearson Correlation, Partial Correlation, Coherence, Synchronization Likelihood] with each measure applied in a different manner. The pros and cons of functional connectivity measures, and interpretation of found connections have been the focus of much research (FC Measure review MIT) [EXPAND MORE MAHDI JALILI PAPER]. Complex network analysis performed on functional connectivity networks provides insight into the spatial and temporal dynamics of the brain. Similar to structural networks and their application to various diseases of the brain, researchers have developed functional connectivity networks, constructed using recordings of neural activation (MEG, EEG, fMRI), to explore any changes in brain dynamics that may be present as a result of illness.[SUMMARY OF FC RESEARCH IN DISEASE]\\
 \\ 
+Functional connectivity networks have also found application in anesthesia research. By recording brain activity using M/EEG, while patients undergo anesthesia, functional connectivity networks are constructed out of the resulting times series. Segmentation of the time series data, into a set of smaller intervals, enables the construction of dynamical functional connectivity that evolve over time. Analysis of the dynamic network can provide insight into how functional connectivity in the brain changes as a transition from a conscious to unconscious state occurs. \citet{leeold} explored the directionality of frontoparietal networks of patients place under general anesthesia using propofol. A total of 10 subjects had their brain activity recorded using EEG whilst transitioning from conscious to unconscious. The cross dependence was used as a measure of functional connectivity to estimate the feedforward and feedback directionality of frontoparietal network. Interestingly, at loss of consciousness (LOC) a sharp decline in the feedback directionality was observed, dropping to the same magnitude of the feedforward, which remained constant except at the LOC and return of consciousness (ROC). At the ROC, a spike in the feedback and feedforward directionality occurs, with the feedback slowly increasing with time. The results are suggestive that a loss of consciousness is caused by changes in the functional connectivity of the frontoparietal lobe. The feedback of information is seemingly important in the maintenance of conscious awareness \citep{leeold}.\\
+\\
+In a separate EEG study on the effects of nitrous oxide as a anesthetic by \citet{kuhl}, they observed a similar reduction in the functional connectivity in the parietal area. They measured the EEG of 20 subjects who had increasing levels of N$_2$O administered until a loss of responsiveness occurred. Their sensor based EEG functional connectivity networks were constructed using GE and GC as a connectivity measure. In addition to the reductions in functional connectivity observed, \citet{kuhl} found that  N$_2$O seemingly perturbs connectivity over a range of spatial scales, concluding that the spatial dependent effects could be the key to anesthetic action. 
+
+\subsection{Learning the network}
+Construction of functional connectivity networks includes a series of complicated steps. Figure X is a pictorial representation of the general process.  
+
+
+\subsection{Brain Nodes}
+Creating brain networks requires the choice of a node (vertices) and edge definition. The possible methods in defining nodes in a functional connectivity studies is diverse, but can generally be split into two main categories, voxel based and sensor based. Voxel based can be described as defining nodes in measurement space, such as in FMRI imaging. Sensor based nodes are generally used in M/EEG studies and can either be localized to reconstructed sources or assigned directly to the sensors themselves. Sensor based nodes unfortunately suffer from volume conduction, which is where the measured potential at the sensor is some combination of multiple current sources within the brain. Volume conduction describes the issue of measuring electromagnetic signals through mediums of differing electromagnetic properties. For a signal to propagate through the brain to a sensor it will pass through several different biological materials (brain matter, cerebral spinal fluid, skin and bone), altering the strength of the received signal. Thus the measured potential, is not a true representation of the underlying activity. The simplest solution to the volume conduction issue is by simply ignoring it. However, the consequences of ignoring the issue will depend ultimately on the research questions attempting to be answered. If the aim is to investigate the functional interactions between specific regions of the brain, then it is sensible to attempt to solve the volume conduction issue through spatial filtering or through source localization. However, if the aim, like that of this research thesis, is to learn the network structure present in M/EEG data, without any prior assumptions, then the volume conduction can for the time being, be disregarded.
+ 
+\subsection{Source Localization - General Overview}
+Nodes in a functional connectivity network can be sensor or source based. Sensor based network analysis is performed on the neural activation patterns recorded at each sensor location on the scalp \citep{fornito2013graph}. Source based network analysis attempts to solve the inverse problem of source localization and infer the physical origin of the recorded signal in the brain \citep{revbull}. The connectivity measures that can be applied to brain network nodes is diverse, INCLUDE EXAMPLES\citet{fornito2013graph}.\\
+\\
+The functional networks of interest in this research thesis are based upon EEG and MEG recordings. EEG and MEG analysis is generally performed in source space, where the recordings from the scalp (M/EEG) are localized to a source within the brain. The primary motivation for this, is to better determine what regions of the brain are connected functionally during a task and the possibility of clinically significant information. Source localization however, is inherently fraught with difficulties due to its ill-posed nature. Locating the origin of electromagnetic fields within the brain volume is an inverse problem, where the 2-D potential map, in the case of EEG, is localized within the cranium. Currently, there exists a myriad of source localization algorithms, however the accuracy of the activity results obtained has not been tested extensively [REF].  REF ET AL evaluated several EEG source localization algorithms with multiple cortical sources, to investigate whether the  However, due to the ill-posed nature of the source localization (inverse problem), a range of priori assumptions must be made to reduce the infinite number of solutions down to something more manageable.\\
+\\
+Functional connectivity has proven particularly useful in the study of neurological disorders \citet{friston}. Functional connectivity is also applied to studies of the brain in altered conscious states. The administration of nitrous oxide (N$_2$O) in increasing concentrations, was shown to break down functional connectivity in patients \citet{REF}. The reduction of functional connectivity, measured using global coherence (GC) and global efficiency (GC), appeared to be more significant in the parietal lobe, supporting claims that the parietal lobe is particularly important for conscious awareness \citet{friston}. The study provided further evidence for the common path way of activation for anesthesia, similar to that observed with the use of propofol \citet{friston}.  
+
+
+
+\subsection{Partial Correlation - Sensor Based}
+The objective of this research thesis is to develop an algorithm that can learn networks using partial correlations as a measure of connectivity. Partial correlation is a measure of the relationship between two variables in a set, with all other variables controlled. It is effectively a measure of the how strongly correlated two variables are with all outside influences disregarded. As we touched on in previously, a core step performed in many functional connectivity studies is thresholding the connectivity matrix. Upon completing the connectivity measure analysis, a symmetric (undirected) or non-symmetric(directed) matrix will contain the values of the pairwise connections between nodes. The next step generally revolves around thresholding the matrix, and constructing a binary adjacency matrix which graph metrics can be applied to. Usually a non-zero connectivity will exist for all pairs of nodes, so the goal is to effectively prune the graph so that only meaningful connections remain. Unfortunately, no justifiable method yet exists to guide the thresholding value, which typically results in multiple iterations of the experiment performed over a range of cut off values. In our research, we are aiming to use partial correlations as a connectivity measure. Interestingly, the very nature of partial correlation acts to remove spurious edges that may be present due to neighbor to neighbor connections by discounting conditional dependencies. Given that, it is possible that thresholding to achieve a sparse network is not required. Furthermore, if we do not wish to construct a binary adjacency matrix on which to apply graph metrics, and a symmetric weighted network is suitable for our analysis, then it seems a sensible choice, to not remove possibly valid edges by applying an ill-founded threshold to the partial correlation networks. Fortunately, many graph metrics that are of interest to in this thesis `clustering, degree distribution, eigenvector centrality' have all been shown to be generalizable from the standard binary adjacency matrix form, to a weighted adjacency network.      
+
+\pagebreak
+%\citep{zalesky2012use}
+
+%\nocite{*}
+%\bibliographystyle{apalike}
+\bibliographystyle{plainnat}
+\bibliography{test}
+
+
+
+
+\end{document}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%5
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%5
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%5
+
+\begin{figure}[h!]%[H]
+\centering\includegraphics[scale = 0.8]{PLANCK.png}%width=\linewidth
+\caption{Planck CMB power spectrum (from Planck 2015)}
+\label{POW}
+\end{figure} 
+
+
+Investigations into the dynamical changes in functional connectivity in the human brain induced by anesthesia, is an active and diverse area of research. The studies rely on the ability to measure brain activity using EEG/MEG and FMRI. From these activity recordings, researchers attempt to develop precise and accurate representations of both the location of the neural populations and the communication occurring between them. The desire is to be able to make quantitative statements about the changes in consciousness and the pathway through which these changes come about. Given the complexity of consciousness and the brain in general it is no surprise that a range of models have been developed to attempt to achieve these goals, with no single solution yet existing.
+\\
+\\
+There exists at least four main problems that are of concern to researchers hoping to derive clinical information using functional connectivity studies and they are; the forward model/solution, inverse model/solution, network learning and quantitative tools. The discussion of the mentioned problems provides a good start point for the review of the relevant literature, given that, a detailed description of each follows. The forward model is an attempt at modeling the both physical topology of the head e.g. shape and volume and the electromagnetic properties of the various tissues e.g. skin, bone, muscle and brain matter. The second problem is the inverse solution, which itself is intimately tied to the first issue.  The inverse problem can be summarized as follows; given a potential map across the surface of the scalp, obtained through EEG recordings, how can the origin of the signals be located in source space? In other words, how does one go from a 2-dimensional surface map to a 3-dimensional source localization? The solution to the inverse problem is complex and with no one size fits all, with each solution requiring implementation of various constraints to reduce the set of possible solutions from infinity to a physically realizable one. 
+\\
+\\
+Network learning is the third problem and covers the issue of building the brain network up from a combination of nodes and edges. The manner in which the nodes and edges are defined can ultimately govern the experimental results obtained. Constructing a brain network can be done in many different ways leading to differing results [REFERENCE]. Functional connectivity can be thought of as edges that have some temporal behavior associated with them, which introduces an additional layer of complexity. The connections are no longer static and can have directional dependencies [REFERENCE], therefore the choice of time scale and the way the connectivity is defined matters significantly [REFERENCE]. The network learning problem is ultimately summarized as the issues that can be found in choosing the appropriate node/edge model for the network which takes into account or relevant spatio-temporal information.
+\\
+\\
+The final problem is that of the quantitative tools used to derive information from the dynamical and topological behavior. Investigating network properties employs the use of a large set of tools ranging from statistical mechanics, graph theory to machine learning A survey of all the different techniques is beyond the scope of this thesis, however an exhaustive review can be found in [REFERENCE], [REFERENCE] and [REFERENCE. Ultimately, the reviews converge on the core issue, that being the results of any particular study will reflect the initial choice of quantitative assessment.
+
+
+comes when attempting to locate the sources of the recorded signals. MEG and EEG take time series recordings at the sensor level, from the recordings researchers attempt to infer the location within the brain at which the source originated. The solution is ill-defined and inverse in nature, with an infinite number or possible solutions present that are needed to be constrained 
+\\
+\\
+Using an appropriate functional connectivity measures is not the only issue faced when modeling the human brain as a complex network. The way in which the network itself is defined is an area of concern as \citet{fornito2013graph} found when a review was completed on some of the current ways in which brain networks are constructed. Once a particular model is adopted, the functional connectivity between brain regions can be observed and quantified within that framework. 
+
+
 
 %%%
 % SOUNDS LIKE YOU'VE GOT A LOT OF LITERATURE TO REVIEW, SON!
@@ -114,17 +198,37 @@ The experiments and the subsequent data driven computational analyses will provi
 \section{Project Outline}
 The aim of this research thesis is to investigate the dynamical behavior of functional brain networks of patients in varying states of consciousness. The functional brain networks will be defined by applying methods from statistical mechanics and graph theory to MEG and EEG data. The data was collected simultaneously from patients who were placed under chemically induced anesthesia, using Xenon and Nitrous Oxide gas. The desire is to be able to characterize the effects of anesthetics and explore the pathways by which they operate to reduce consciousness. The patients are monitored prior, during and post anesthesia, providing a temporally and spatially resolved signal of neural  activity in varies regions of the brain. By defining and modeling the activity in the form of functional brain networks, the goal is to be able to quantify states of differing consciousness by the topological or statistical properties of the dynamic networks. The research will be completed under the supervision of Prof. Damien Hicks and Prof. of Swinburne University of Technology.
 
-\section{Conclusions}
+\section{Outline of Literature Review}
+I need to sketch out the general brain networks, how and why they are used, both structural and functional. Then discuss functional connectivity in general, this leads to functional connectivity studies in consciousness. Then to sensor and source based, why sensor based should be used? Then focus on partial correlations as connectivity measures.
+\subsection{General Themes}
+\begin{itemize}
+\item What is a brain network?
+\item How are they built?
+\item Why are they used?
+\end{itemize}
+\subsection{Functional Connectivity}
+\begin{itemize}
+\item What is functional connectivity?
+\item What studies is it used in?
+\item Example of measures
+\end{itemize}
+\subsection{Anesthesia studies - Sensor/Source Based - Partial correlation}
+\begin{itemize}
+\item Studies involving functional connectivity
+\item Sensor or source based?
+\item Partial correlation over other measures
+\end{itemize}
+\section{Sensor versus Source Based}
+The main motivation for this research thesis is to investigate whether sensor based (time-series) MEG/EEG analysis, can provide statistically meaningful information on functional connectivity changes in neural activity recordings. EEG and MEG analysis is generally performed in source space, where the recordings from the scalp (EEG) or above (MEG) are localized to a source within the brain. The primary motivation for this, is to better determine what regions of the brain are connected functionally during a task. Source localization however, is inherently fraught with difficulties due to its ill-posed nature. Locating the origin of electromagnetic fields within the brain volume is an inverse problem, where the 2-D potential map, in the case of EEG, is localized within the cranium. Currently, there exists a myriad of source localization algorithms, however the accuracy of the activity results obtained has not been tested extensively [REF].  REF ET AL evaluated several EEG source localization algorithms with multiple cortical sources, to investigate whether the  However, due to the ill-posed nature of the source localization (inverse problem), a range of priori assumptions must be made to reduce the infinite number of solutions down to something more manageable.\\
+\\ 
+Pros to using source localization: Provides information on underlying physiology - possible clinical information.\\
+\\
+Cons to using source localization: broad range of procedures - little consensus on the best - no one size fits all - results dependent somewhat on model used an priori assumptions - computational complex - difficulty in interpreting results.  
+\\
+Pros to using sensor based: Simple and more easily implemented - Few, if any assumptions made - Computationally faster - Dealing with raw data so no introduction of bias from model assumptions - seemingly a good first approximation to form build further localization studies on
+\\
+\\
+Cons to using sensor based: Little, if any physiological information - no clinical information - possibly not informative at all
 
-
-\cite{zart}
-
-\nocite{*}
-\bibliographystyle{plain}
-\bibliography{test}
-
-
-
-
-\end{document}
-
+It is of the belief of the author, that these higher level and complex localization procedures would be complimented well by low level sensor based analysis. Such a base level analysis
+The ability to model the brain as a complex network enables the quantification of structural and temporal properties that had previously been unfeasible (Sporns 2010). Despite the brains receptivity to being modeled in this way, it is not without experimental drawbacks. In a paper by Fornito and Zalesky (2013), they access the potential of complex networks as a tool for brain research. They discuss several limitations that are currently faced at various stages of modeling that can influence results. The first and major issue that is meets any team is the ability to define the network nodes. The brain, as mentioned prior, is made up of billions of neurons and trillions of connections, now to model the brain at the neuron scale would be computationally unfeasible.
